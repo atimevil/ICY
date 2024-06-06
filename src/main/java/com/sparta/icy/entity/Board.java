@@ -5,10 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-
 import java.time.LocalDateTime;
-import java.util.Date;
 
+// Board 엔티티 클래스
 @Entity
 @Getter
 @Setter
@@ -16,20 +15,25 @@ import java.util.Date;
 @Table(name = "feed")
 public class Board {
 
+    // 엔티티의 기본 키를 나타내는 필드
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "feed_id")
-    private Long id;
+    private Long feed_id; // 게시물 고유 번호
 
+    // 게시물의 내용을 나타내는 필드
     @Column(name = "content", columnDefinition = "LONGTEXT")
-    private String content;
+    private String content; // 게시물 내용
 
+    // 게시물의 생성일을 나타내는 필드
     @Column(name = "create_at")
-    private LocalDateTime createdAt;
+    private LocalDateTime create_at; // 게시물 생성일
 
+    // 게시물의 수정일을 나타내는 필드
     @Column(name = "update_at")
-    private LocalDateTime updatedAt;
+    private LocalDateTime update_at; // 게시물 수정일
 
+    // 게시물을 작성한 사용자의 ID를 나타내는 필드
     @Column(name = "user_id")
-    private Long userId;
+    private Long user_id; // 사용자 고유 번호
 }
