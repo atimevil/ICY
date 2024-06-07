@@ -21,31 +21,31 @@ public class BoardController {
         this.boardService = boardService;
     }
 
-    // 게시물을 생성하는 엔드포인트
+    // 게시물을 생성
     @PostMapping
     public void createBoard(@RequestBody BoardDto boardDto) {
         boardService.createBoard(boardDto);
     }
 
-    // 특정 게시물을 조회하는 엔드포인트
+    // 특정 게시물을 조회
     @GetMapping("/{id}")
     public BoardDto getBoard(@PathVariable Long id) {
         return boardService.getBoard(id);
     }
 
-    // 특정 게시물을 수정하는 엔드포인트
+    // 특정 게시물을 수정
     @PutMapping("/{id}")
     public void updateBoard(@PathVariable Long id, @RequestBody BoardDto boardDto) {
         boardService.updateBoard(id, boardDto);
     }
 
-    // 특정 게시물을 삭제하는 엔드포인트
+    // 특정 게시물을 삭제
     @DeleteMapping("/{id}")
     public void deleteBoard(@PathVariable Long id) {
         boardService.deleteBoard(id);
     }
 
-    // 모든 게시물을 조회하는 엔드포인트
+    // 모든 게시물을 조회
     @GetMapping
     public ResponseEntity<?> getAllBoards() {
         List<BoardDto> boards = boardService.getAllBoards();
