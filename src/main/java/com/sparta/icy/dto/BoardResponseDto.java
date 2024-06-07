@@ -27,7 +27,7 @@ public class BoardResponseDto {
     // 게시물을 작성한 사용자의 고유 번호를 나타내는 필드
     private Long user_id;
 
-    // 생성자 메서드입니다. 각 필드의 값을 받아 초기화
+    // 생성자 메서드로 각 필드의 값을 받아 초기화
     public BoardResponseDto(Long feed_id, String content, LocalDateTime create_at, LocalDateTime update_at, Long user_id) {
         this.feed_id = feed_id;
         this.content = content;
