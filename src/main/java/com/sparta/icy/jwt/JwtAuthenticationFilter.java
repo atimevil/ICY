@@ -49,7 +49,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String username = ((UserDetailsImpl) authResult.getPrincipal()).getUsername();
         Long userId = ((UserDetailsImpl) authResult.getPrincipal()).getId();
 
-        String token = jwtUtil.createToken(username, userId);
+        String token = jwtUtil.createToken(username, userId, true);
         jwtUtil.addJwtToCookie(token, response);
     }
 

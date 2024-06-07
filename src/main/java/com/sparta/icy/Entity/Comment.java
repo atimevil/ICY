@@ -35,27 +35,13 @@ public class Comment {
     @Column(nullable = false)
     private LocalDateTime updated_at;
 
-    @Column(nullable = false)
-    private Long like;
+//    @Column(nullable = false)
+//    private Long like;
 
     public Comment(CommentRequestDto commentRequestDto) {
         this.content = commentRequestDto.getContent();
         this.created_at = LocalDateTime.now();
         this.updated_at = LocalDateTime.now();
-        this.like = 0L;
-    }
-
-    @PrePersist
-    protected void onCreate() {
-        created_at = LocalDateTime.now();
-        updated_at = LocalDateTime.now();
-        if (like == null) {
-            like = 0L;
-        }
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updated_at = LocalDateTime.now();
+        // this.like = 0L;
     }
 }
