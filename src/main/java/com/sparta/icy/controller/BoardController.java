@@ -10,7 +10,7 @@ import java.util.List;
 
 // 게시물 관련 API를 처리하는 Controller 클래스
 @RestController
-@RequestMapping("/api/boards")
+@RequestMapping("/boards")
 public class BoardController {
 
     private final BoardService boardService;
