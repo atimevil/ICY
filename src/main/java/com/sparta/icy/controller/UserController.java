@@ -36,15 +36,6 @@ public class UserController {
     public ResponseEntity<User> updateUser(@PathVariable long id, @RequestBody UserUpdateRequest req) {
         return ResponseEntity.ok(userService.updateUser(id, req));
     }
-    @GetMapping("/login-page")
-    public String loginPage() {
-        return "login";
-    }
-    @GetMapping("/login-success")
-    public String mainPage() {
-        return "index";
-    }
-
 
     @PostMapping("/sign-up")
     public String signup(@Valid @RequestBody SignupRequestDto requestDto, BindingResult bindingResult) {
