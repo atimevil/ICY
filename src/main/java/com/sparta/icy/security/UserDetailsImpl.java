@@ -1,7 +1,7 @@
 package com.sparta.icy.security;
 
-import com.sparta.icy.Entity.Status;
-import com.sparta.icy.Entity.User;
+import com.sparta.icy.entity.UserStatus;
+import com.sparta.icy.entity.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -37,8 +37,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        Status status = user.getStatus();
-        String status1 = status.getStatus();
+        String status1 = user.getStatus();
 
         SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(status1);
         Collection<GrantedAuthority> authorities = new ArrayList<>();
