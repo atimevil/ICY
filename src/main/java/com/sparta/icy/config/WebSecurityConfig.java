@@ -5,6 +5,7 @@ import com.sparta.icy.jwt.JwtAuthenticationFilter;
 import com.sparta.icy.jwt.JwtAuthorizationFilter;
 import com.sparta.icy.jwt.JwtUtil;
 import com.sparta.icy.security.UserDetailsServiceImpl;
+import com.sparta.icy.service.LogService;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -40,8 +41,8 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public JwtAuthenticationFilter jwtAuthenticationFilter(LogController logController) throws Exception {
-        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil, logController); // LogController 인스턴스를 생성자에 추가
+    public JwtAuthenticationFilter jwtAuthenticationFilter(LogController logController, LogService logService) throws Exception {
+        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil, logService); // LogController 인스턴스를 생성자에 추가
         filter.setAuthenticationManager(authenticationManager(authenticationConfiguration));
         return filter;
     }
