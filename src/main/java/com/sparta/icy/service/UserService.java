@@ -15,6 +15,7 @@ import com.sparta.icy.error.PasswordDoesNotMatchException;
 import com.sparta.icy.jwt.JwtUtil;
 import com.sparta.icy.repository.UserRepository;
 import com.sparta.icy.security.UserDetailsImpl;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -106,12 +107,11 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public boolean signout(String userDetailsUsername, String password) {
+    public boolean signout(String userDetailsUsername, String password, HttpServletResponse response) {
         try {
             User checkUsername = userRepository.findByUsername(userDetailsUsername).orElseThrow();
             //이미 탈퇴한 회원이라서 재탈퇴 못함
-            System.out.println(passwordEncoder.encode(password));
-            System.out.println(checkUsername.getPassword());
+
             if (checkUsername.getStatus().equals(UserStatus.SECESSION.getStatus())) {
                 throw new AlreadySignedOutUserCannotBeSignoutAgainException("이미 탈퇴한 회원은 재탈퇴가 불가능");
 
@@ -132,6 +132,12 @@ public class UserService {
 
             // 탈퇴한 회원 로그 추가
             logService.addLog(userDetailsUsername, "탈퇴"); // LogService의 addLog 메서드 호출
+
+            Cookie cookie = new Cookie(JwtUtil.AUTHORIZATION_HEADER, null);
+            cookie.setPath("/");
+            cookie.setHttpOnly(true);
+            cookie.setMaxAge(0);
+            response.addCookie(cookie);
 
             return true;
 

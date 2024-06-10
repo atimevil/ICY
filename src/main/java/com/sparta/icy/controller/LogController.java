@@ -2,10 +2,8 @@ package com.sparta.icy.controller;
 
 import com.sparta.icy.dto.LoginRequestDto;
 import com.sparta.icy.jwt.JwtUtil;
-import com.sparta.icy.security.UserDetailsImpl;
 import com.sparta.icy.service.LogService;
 import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -61,11 +59,5 @@ public class LogController {
         cookie.setMaxAge(0);
         response.addCookie(cookie);
         return ResponseEntity.ok("로그아웃되었습니다.");
-    }
-
-    @PostMapping("/add-login-log")
-    public ResponseEntity<String> addLoginLog(@RequestBody String username) {
-        logService.addLog(username, "로그인"); // 로그인 로그 추가
-        return ResponseEntity.ok("로그 추가 완료");
     }
 }
