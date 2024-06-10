@@ -64,11 +64,7 @@ public class WebSecurityConfig {
         http.authorizeHttpRequests((authorizeHttpRequests) ->
                 authorizeHttpRequests
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll() // 리소스에 대한 접근 허용
-                        .requestMatchers("/user/login").permitAll() // 로그인 API에 대한 접근 허용
-                        .requestMatchers("/user/logout").permitAll() // 로그아웃 API에 대한 접근 허용
-                        .requestMatchers("/newsfeed").permitAll() // 모든 사용자에게 뉴스피드 조회 허용
-                        .requestMatchers("/newsfeed/*").permitAll() // 모든 사용자에게 특정 게시물 조회 허용
-                        .requestMatchers("/newsfeed/create").authenticated() // 게시물 작성, 수정, 삭제는 인증 필요
+                        .requestMatchers("/user/**", "/log/**").permitAll() //
                         .anyRequest().authenticated() // 나머지 요청은 인증 필요
         );
 

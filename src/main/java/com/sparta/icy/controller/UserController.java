@@ -1,41 +1,51 @@
 package com.sparta.icy.controller;
 
+import com.sparta.icy.dto.AuthResponse;
 import com.sparta.icy.dto.LoginRequestDto;
-import com.sparta.icy.dto.SignupRequestDto;
-import com.sparta.icy.dto.UserProfileResponse;
-import com.sparta.icy.dto.UserUpdateRequest;
+import com.sparta.icy.dto.UserRequestDto;
+import com.sparta.icy.entity.RefreshToken;
 import com.sparta.icy.entity.User;
 import com.sparta.icy.jwt.JwtUtil;
-import com.sparta.icy.security.UserDetailsImpl;
-import com.sparta.icy.service.LogService;
-import com.sparta.icy.service.UserService;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import com.sparta.icy.service.AuthService;
+import com.sparta.icy.service.CustomUserDetailsService;
+import com.sparta.icy.service.RefreshTokenService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
+import java.time.LocalDateTime;
 @RestController
 @RequestMapping("/user")
 @RequiredArgsConstructor
 @Slf4j
 public class UserController {
     private final UserService userService;
-    private final LogService logService;
-    private final JwtUtil jwtUtil;
-    private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
+   @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @Autowired
+    private CustomUserDetailsService userDetailsService;
+
+    @Autowired
+    private RefreshTokenService refreshTokenService;
+
+
+    @PostMapping("/register")
+    public ResponseEntity<UserRequestDto> register(@RequestBody UserRequestDto requestDto){
+        return null;
+    }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<UserProfileResponse> getUser(@PathVariable long id) {
@@ -57,10 +67,11 @@ public class UserController {
         return "회원가입 성공";
     }
 
+
     @PatchMapping("/sign-out")
-    public String signout(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody String password) {
+    public String signout(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody SignoutRequestDto signoutRequestDto) {
         User user=userDetails.getUser();
-        boolean result= userService.signout(user.getUsername(), password);
+        boolean result= userService.signout(user.getUsername(), signoutRequestDto);
         //탈퇴 실패
         if(!result){
             return "탈퇴 실패";
@@ -83,14 +94,6 @@ public class UserController {
 
         // 로그 추가
         logService.addLoginLog(requestDto.getUsername());
-
-        return ResponseEntity.ok("로그인 성공");
-    }
-
-    @PostMapping("/logout")
-    public ResponseEntity<String> logout(HttpServletResponse response) {
-        userService.logout(response);
-        return ResponseEntity.ok("로그아웃 성공");
     }
 
     @PutMapping("/{id}")
@@ -99,13 +102,5 @@ public class UserController {
         return ResponseEntity.ok(updatedUser);
     }
 
-    @DeleteMapping("/user/{username}")
-    public ResponseEntity<String> signout(@PathVariable String username, @RequestParam String password) {
-        boolean result = userService.signout(username, password);
-        if (result) {
-            return ResponseEntity.ok("탈퇴 성공");
-        } else {
-            return ResponseEntity.badRequest().body("탈퇴 실패");
-        }
-    }
+
 }

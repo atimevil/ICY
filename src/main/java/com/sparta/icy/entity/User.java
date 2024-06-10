@@ -26,7 +26,6 @@ public class User extends TimeStamped {
     private String email;
     @Column(nullable = false)
     private String intro;
-
     @Setter
     @Column(nullable = false)
     private String status;
@@ -44,6 +43,7 @@ public class User extends TimeStamped {
     private List<Comment> comments;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Newsfeed> newsfeeds;
+
     public void update(UserUpdateRequest req) {
         this.nickname = req.getNickname();
         this.intro = req.getIntro();
