@@ -1,4 +1,4 @@
-package com.sparta.icy.controller;
+package com.sparta.icy;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.icy.dto.UserProfileResponse;
