@@ -1,7 +1,12 @@
-package com.sparta.icy;
+package com.sparta.icy.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sparta.icy.dto.SignoutRequestDto;
+import com.sparta.icy.dto.SignupRequestDto;
 import com.sparta.icy.dto.UserProfileResponse;
+import com.sparta.icy.dto.UserUpdateRequest;
+import com.sparta.icy.entity.User;
+import com.sparta.icy.security.UserDetailsImpl;
 import com.sparta.icy.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,14 +15,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.filter.CharacterEncodingFilter;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 @ExtendWith(MockitoExtension.class)
 public class UserControllerTest {
@@ -33,11 +39,9 @@ public class UserControllerTest {
 
     @BeforeEach
     void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(userController)
-                .build();
+        mockMvc = MockMvcBuilders.standaloneSetup(userController).build();
         objectMapper = new ObjectMapper();
     }
-
 
     @Test
     void getUserTest() throws Exception {
@@ -59,4 +63,5 @@ public class UserControllerTest {
         // then
         verify(userService, times(1)).getUser(userId);
     }
+
 }

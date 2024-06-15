@@ -5,8 +5,10 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 public class SignupRequestDto {
     @NotBlank
     @Size(min = 10, max = 20, message = "사용자 ID는 10글자 이상 20글자 이하여야 합니다.")
