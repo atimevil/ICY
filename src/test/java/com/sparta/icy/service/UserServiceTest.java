@@ -219,4 +219,23 @@ class UserServiceTest {
         assertThrows(IllegalArgumentException.class, () -> userService.getUser(1L));
     }
 
+    @Test
+    void testUpdateUser_PasswordDoesNotMatch() {
+        // Given
+        User userToUpdate = new User();
+        userToUpdate.setId(1L);
+        userToUpdate.setUsername("testuser1234");
+        userToUpdate.setPassword("Password123!");
+
+        UserUpdateRequest userUpdateRequest = new UserUpdateRequest();
+        userUpdateRequest.setCurrentPassword("WrongPassword!");
+        userUpdateRequest.setNewPassword("NewPassword123!");
+
+        when(userRepository.findById(1L)).thenReturn(Optional.of(userToUpdate));
+        when(passwordEncoder.matches(userUpdateRequest.getCurrentPassword(), userToUpdate.getPassword())).thenReturn(false);
+
+        // When & Then
+        assertThrows(IllegalStateException.class, () -> userService.updateUser(1L, userUpdateRequest));
+    }
+
 }
