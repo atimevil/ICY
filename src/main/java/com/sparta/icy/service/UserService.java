@@ -38,7 +38,7 @@ public class UserService {
         if (user.getStatus().equals(UserStatus.SECESSION.getStatus())) {
             throw new IllegalArgumentException("유효하지 않은 사용자입니다.");
         }
-        return new UserProfileResponse(user.getUsername(), user.getNickname(), user.getIntro(), user.getEmail());
+        return new UserProfileResponse(user.getUsername(), user.getNickname(), user.getEmail(), user.getIntro());
     }
 
     @Transactional

@@ -61,7 +61,7 @@ public class UserControllerTest {
                 .andDo(print());
 
         // then
-        verify(userService, times(1)).getUser(userId);
+        verify(userService).getUser(userId);
     }
 
 }

@@ -3,6 +3,7 @@ package com.sparta.icy.service;
 import com.sparta.icy.aspect.LoggingAspect;
 import com.sparta.icy.dto.SignoutRequestDto;
 import com.sparta.icy.dto.SignupRequestDto;
+import com.sparta.icy.dto.UserProfileResponse;
 import com.sparta.icy.entity.User;
 import com.sparta.icy.entity.UserStatus;
 import com.sparta.icy.repository.UserRepository;
@@ -17,6 +18,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
 class UserServiceTest {
@@ -96,6 +99,26 @@ class UserServiceTest {
 
     @Test
     void getUser() {
+        //given
+        User user = new User();
+        user.setId(1L);
+        user.setUsername("testuser1234");
+        user.setNickname("testnickname");
+        user.setEmail("testuser@example.com");
+        user.setIntro("testintro");
+        user.setStatus(String.valueOf(UserStatus.IN_ACTION));
+
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+
+        // When
+        UserProfileResponse response = userService.getUser(1L);
+
+        // Then
+        assertNotNull(response);
+        assertEquals("testuser1234", response.getUsername());
+        assertEquals("testnickname", response.getNickname());
+        assertEquals("testintro", response.getIntro());
+        assertEquals("testuser@example.com", response.getEmail());
     }
 
     @Test
