@@ -6,6 +6,7 @@ import com.sparta.icy.dto.UserProfileResponse;
 import com.sparta.icy.dto.UserUpdateRequest;
 import com.sparta.icy.entity.User;
 import com.sparta.icy.entity.UserStatus;
+import com.sparta.icy.error.AlreadySignedOutUserCannotBeSignoutAgainException;
 import com.sparta.icy.error.DuplicateUsernameException;
 import com.sparta.icy.repository.UserRepository;
 import com.sparta.icy.security.UserDetailsImpl;
@@ -172,8 +173,8 @@ class UserServiceTest {
     }
 
     @Test
-    void testSignup_duplicateUsername() {
-        // Given
+    void signup_duplicateUsername() {
+        //given
         SignupRequestDto signupRequestDto = new SignupRequestDto();
         signupRequestDto.setUsername("testuser1234");
         signupRequestDto.setPassword("Password123!");
@@ -183,9 +184,30 @@ class UserServiceTest {
 
         when(userRepository.findByUsername(signupRequestDto.getUsername())).thenReturn(Optional.of(new User()));
 
-        // When
-        // Then
+        //when
+        //then
         assertThrows(DuplicateUsernameException.class, () -> userService.signup(signupRequestDto));
+    }
+
+    @Test
+    void signout_alreadySignedOut() {
+        //given
+        User user = new User();
+        user.setUsername("testuser1234");
+        user.setPassword("Password123!");
+        user.setNickname("testnickname");
+        user.setEmail("testuser@example.com");
+        user.setStatus(UserStatus.SECESSION.getStatus());
+
+        SignoutRequestDto requestDto = new SignoutRequestDto();
+        requestDto.setPassword("Password123!");
+
+        when(userRepository.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
+        when(passwordEncoder.matches(requestDto.getPassword(), user.getPassword())).thenReturn(true);
+
+        //when
+        //then
+        assertThrows(AlreadySignedOutUserCannotBeSignoutAgainException.class, () -> userService.signout(user.getUsername(), requestDto));
     }
 
 }
