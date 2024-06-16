@@ -3,14 +3,19 @@ package com.sparta.icy.service;
 import com.sparta.icy.dto.SignoutRequestDto;
 import com.sparta.icy.dto.SignupRequestDto;
 import com.sparta.icy.dto.UserProfileResponse;
+import com.sparta.icy.dto.UserUpdateRequest;
 import com.sparta.icy.entity.User;
 import com.sparta.icy.entity.UserStatus;
 import com.sparta.icy.repository.UserRepository;
+import com.sparta.icy.security.UserDetailsImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
@@ -19,6 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
+
 
 class UserServiceTest {
 
@@ -34,9 +40,18 @@ class UserServiceTest {
     @Mock
     private LogService logService;
 
+    @Mock
+    private Authentication authentication;
+
+    @Mock
+    private SecurityContext securityContext;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+
+        SecurityContextHolder.setContext(securityContext);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
 
     }
 
@@ -97,7 +112,7 @@ class UserServiceTest {
 
     @Test
     void getUser() {
-        //given
+        // given
         User user = new User();
         user.setId(1L);
         user.setUsername("testuser1234");
@@ -108,10 +123,10 @@ class UserServiceTest {
 
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
 
-        // When
+        // when
         UserProfileResponse response = userService.getUser(1L);
 
-        // Then
+        // then
         assertNotNull(response);
         assertEquals("testuser1234", response.getUsername());
         assertEquals("testnickname", response.getNickname());
@@ -121,8 +136,40 @@ class UserServiceTest {
 
     @Test
     void updateUser() {
-    }
+        //given
+        User currentUser = new User();
+        currentUser.setId(1L);
+        currentUser.setUsername("testuser1234");
+        currentUser.setPassword("Password123!");
+        currentUser.setNickname("testnickname");
+        currentUser.setEmail("testuser@example.com");
+        currentUser.setIntro("testintro");
+        currentUser.setStatus(String.valueOf(UserStatus.IN_ACTION));
+        UserDetailsImpl userDetails = new UserDetailsImpl(currentUser);
 
+        UserUpdateRequest updateRequest = new UserUpdateRequest();
+        updateRequest.setCurrentPassword("Password123!");
+        updateRequest.setNewPassword("NewPassword123!");
+        updateRequest.setNickname("newnickname");
+        updateRequest.setIntro("newintro");
+
+        when(userRepository.findById(1L)).thenReturn(Optional.of(currentUser));
+        when(passwordEncoder.matches(updateRequest.getCurrentPassword(), currentUser.getPassword())).thenReturn(true);
+        when(authentication.getPrincipal()).thenReturn(userDetails);
+        when(authentication.isAuthenticated()).thenReturn(true);
+        when(passwordEncoder.encode(updateRequest.getNewPassword())).thenReturn("newEncodedPassword");
+        userRepository.save(currentUser);
+
+        //when
+        currentUser = userService.updateUser(1L, updateRequest);
+
+        //then
+        assertThat(currentUser.getPassword()).isEqualTo("newEncodedPassword");
+        assertThat(currentUser.getNickname()).isEqualTo("newnickname");
+        assertThat(currentUser.getIntro()).isEqualTo("newintro");
+
+        verify(userRepository).save(currentUser);
+    }
 
     @Test
     void logout() {
