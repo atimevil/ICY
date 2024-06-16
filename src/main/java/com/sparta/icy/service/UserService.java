@@ -29,7 +29,6 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtUtil jwtUtil;
     private final LogService logService; // LogService 주입
 
     public UserProfileResponse getUser(long id) {
@@ -146,8 +145,6 @@ public class UserService {
         User currentUser = userDetails.getUser();
         return currentUser;
     }
-
-    public void logout(HttpServletResponse response) {
-    }
+    
 }
 
