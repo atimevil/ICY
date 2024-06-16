@@ -6,6 +6,7 @@ import com.sparta.icy.dto.UserProfileResponse;
 import com.sparta.icy.dto.UserUpdateRequest;
 import com.sparta.icy.entity.User;
 import com.sparta.icy.entity.UserStatus;
+import com.sparta.icy.error.DuplicateUsernameException;
 import com.sparta.icy.repository.UserRepository;
 import com.sparta.icy.security.UserDetailsImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,8 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 
@@ -172,6 +172,20 @@ class UserServiceTest {
     }
 
     @Test
-    void logout() {
+    void testSignup_duplicateUsername() {
+        // Given
+        SignupRequestDto signupRequestDto = new SignupRequestDto();
+        signupRequestDto.setUsername("testuser1234");
+        signupRequestDto.setPassword("Password123!");
+        signupRequestDto.setNickname("testnickname");
+        signupRequestDto.setIntro("testintro");
+        signupRequestDto.setEmail("testuser@example.com");
+
+        when(userRepository.findByUsername(signupRequestDto.getUsername())).thenReturn(Optional.of(new User()));
+
+        // When
+        // Then
+        assertThrows(DuplicateUsernameException.class, () -> userService.signup(signupRequestDto));
     }
+
 }
