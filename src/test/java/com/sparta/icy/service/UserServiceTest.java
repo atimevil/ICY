@@ -210,4 +210,13 @@ class UserServiceTest {
         assertThrows(AlreadySignedOutUserCannotBeSignoutAgainException.class, () -> userService.signout(user.getUsername(), requestDto));
     }
 
+    @Test
+    void testGetUser_NotFound() {
+        // Given
+        when(userRepository.findById(1L)).thenReturn(Optional.empty());
+
+        // When & Then
+        assertThrows(IllegalArgumentException.class, () -> userService.getUser(1L));
+    }
+
 }
