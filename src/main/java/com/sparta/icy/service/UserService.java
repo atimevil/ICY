@@ -145,6 +145,6 @@ public class UserService {
         User currentUser = userDetails.getUser();
         return currentUser;
     }
-    
+
 }
 
