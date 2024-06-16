@@ -1,6 +1,7 @@
 package com.sparta.icy.service;
 
 import com.sparta.icy.aspect.LoggingAspect;
+import com.sparta.icy.dto.SignoutRequestDto;
 import com.sparta.icy.dto.SignupRequestDto;
 import com.sparta.icy.entity.User;
 import com.sparta.icy.entity.UserStatus;
@@ -30,15 +31,12 @@ class UserServiceTest {
     private PasswordEncoder passwordEncoder;
 
     @Mock
-    private LoggingAspect loggingAspect;
+    private LogService logService;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
 
-        AspectJProxyFactory fac = new AspectJProxyFactory(userService);
-        fac.addAspect(loggingAspect);
-        userService = fac.getProxy();
     }
 
     @Test
@@ -60,7 +58,7 @@ class UserServiceTest {
         userService.signup(requestDto);
 
         //then
-        verify(userRepository, times(1)).save(any(User.class));
+        verify(userRepository).save(any(User.class));
 
         when(userRepository.findByUsername(requestDto.getUsername())).thenReturn(Optional.of(savedUser));
         assertThat(savedUser.getUsername()).isEqualTo(requestDto.getUsername());
@@ -72,6 +70,31 @@ class UserServiceTest {
     }
 
     @Test
+    void signout() {
+        //given
+        User user = new User();
+        user.setUsername("testuser1234");
+        user.setPassword("Password123!");
+        user.setNickname("testnickname");
+        user.setEmail("testuser@example.com");
+        user.setStatus(String.valueOf(UserStatus.IN_ACTION));
+
+        SignoutRequestDto requestDto = new SignoutRequestDto();
+        requestDto.setPassword("Password123!");
+
+        when(userRepository.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
+        when(passwordEncoder.matches(requestDto.getPassword(), user.getPassword())).thenReturn(true);
+
+        //when
+        boolean result = userService.signout(user.getUsername(), requestDto);
+
+        //then
+        assertThat(result).isTrue();
+        verify(userRepository).save(any(User.class));
+        verify(logService).addLog(user.getUsername(), "탈퇴");
+    }
+
+    @Test
     void getUser() {
     }
 
@@ -79,9 +102,6 @@ class UserServiceTest {
     void updateUser() {
     }
 
-    @Test
-    void signout() {
-    }
 
     @Test
     void logout() {

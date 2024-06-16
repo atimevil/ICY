@@ -4,8 +4,10 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 public class SignoutRequestDto {
     @NotBlank
     @Size(min = 10, message = "비밀번호는 최소 10글자 이상이어야 합니다.")
