@@ -1,6 +1,5 @@
 package com.sparta.icy.service;
 
-import com.sparta.icy.aspect.LoggingAspect;
 import com.sparta.icy.dto.SignoutRequestDto;
 import com.sparta.icy.dto.SignupRequestDto;
 import com.sparta.icy.dto.UserProfileResponse;
@@ -12,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.aop.aspectj.annotation.AspectJProxyFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;

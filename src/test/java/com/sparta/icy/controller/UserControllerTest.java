@@ -1,12 +1,7 @@
 package com.sparta.icy.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sparta.icy.dto.SignoutRequestDto;
-import com.sparta.icy.dto.SignupRequestDto;
 import com.sparta.icy.dto.UserProfileResponse;
-import com.sparta.icy.dto.UserUpdateRequest;
-import com.sparta.icy.entity.User;
-import com.sparta.icy.security.UserDetailsImpl;
 import com.sparta.icy.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,15 +10,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
 public class UserControllerTest {
