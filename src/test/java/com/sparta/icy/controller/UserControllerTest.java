@@ -1,6 +1,5 @@
 package com.sparta.icy.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.icy.dto.UserProfileResponse;
 import com.sparta.icy.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
